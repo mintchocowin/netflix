@@ -38,7 +38,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-
-    <App />
+<RecoilRoot>
+  <QueryClientProvider client={client}>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle/>
+        <App />
+    </ThemeProvider>
+  </QueryClientProvider>
+</RecoilRoot>
   
 );
