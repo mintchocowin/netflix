@@ -173,7 +173,7 @@ const Home = ()=>{
       setIndex((prev)=>(prev=== maxIndex ? 0 :prev+1));
     }
   };
-const toggleLaeving = () =>{
+const toggleLeaving = () =>{
   setLeaving((prev)=>!prev);
 };
 const {data, isLoading} = useQuery <IGetmoviesResult>(
@@ -197,11 +197,70 @@ data?.results.find(
 );
 console.log(clickedMovie);
 return (
-  <Wrapper>
+<Wrapper>
+  {isLoading?(<Loader>Loading...</Loader>):(
+    <>
+    <Banner onClick={increaseIndex} bgPhoto={makeImagePath(data?.results[3].backdrop_path||"")}>
+<Title>{data?.results[3].title}</Title>
+<Overview>{data?.results[3].overview}</Overview>
+    </Banner>
+    <Slider>
+      <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+        <Row
+        key={index}
+        variants={rowVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition={{
+          type:"tween",
+          duration:1,
+        }}>
+          {data?.results
+          .slice(1)
+          .slice(offset*index, index*offset+offset)
+          .map((movie)=>(
+            <Box
+            layoutId={movie.id+""}
+            onClick={()=>onBoxClicked(movie.id)}
+            key={movie.id}
+            bgPhoto={makeImagePath(movie.backdrop_path)}
+            variants={boxVariants}
+            initial="normal"
+            transition={{type:"tween"}}
+            whileHover="hover"
+            >
+              <Info variants={infoVariants}>
+                <h4>{movie.title}</h4>
+              </Info>
+            </Box>
+          ))}
+        </Row>
+      </AnimatePresence>
+    </Slider>
 
-  </Wrapper>
-)
+    <AnimatePresence>
+      {bigMovieMatch ? (
+        <>
+        <Overlay onClick={onOverlayClick} animate={{opacity:1}} exit={{opacity:0}}/>
+        <BigMovie layoutId={bigMovieMatch.params.movieId} style={{top:scrollY.get()+100,}}>
 
+          {clickedMovie && (<>
+          <BigCover style={{backgroundImage:`linear-gradient(to top, black,transparent ),
+            url(${makeImagePath(clickedMovie.backdrop_path,"w500")})`,
+            }}/>
+              <BigTitle>{clickedMovie.title}</BigTitle>
+              <BigOverView>{clickedMovie.overview}</BigOverView>
+          </>)}
+        </BigMovie>
+        </>
+      ):null}
+    </AnimatePresence>
+  
+    </>
+  )}
+</Wrapper> 
+);
+};
 
-}
-
+export default Home;
