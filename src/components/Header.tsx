@@ -188,9 +188,7 @@ return(
          animate={inputAnimation}
          initial={{scaleX:0}}
          transition ={{type:"linear"}}/>
-      
-        
-        </Search>
+          </Search>
         </Col>
     </Nav>
 )

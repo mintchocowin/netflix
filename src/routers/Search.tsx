@@ -219,7 +219,7 @@ useEffect(()=>{
         ...prev,
         [movie.id]:reviewData?.results?.map((review:any)=>
         author:review.author,
-      content:reviewData.content,)
+      content:reviewData.content,0)
       })))
     })
   }
